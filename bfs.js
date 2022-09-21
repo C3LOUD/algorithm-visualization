@@ -1,0 +1,70 @@
+"strict mode";
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+class Node {
+  constructor(row, col, parentNodeId) {
+    this.currentNode = [row, col];
+    this.parentNodeId = parentNodeId;
+  }
+
+  get currentNodeId() {
+    const [row, col] = this.currentNode;
+    return `${row}x${col}`;
+  }
+
+  get neighbors() {
+    const [row, col] = this.currentNode;
+    return [
+      [row + 1, col],
+      [row - 1, col],
+      [row, col + 1],
+      [row, col - 1],
+    ];
+  }
+}
+
+export const bfsStart = (startPos, grid) => {
+  let queue = [];
+  const nodes = [];
+  queue.push(startPos);
+
+  while (!!queue.length) {
+    const node = new Node(...queue.shift());
+    nodes.push(node);
+
+    for (let neighbor of node.neighbors) {
+      const [i, j] = neighbor;
+      if (nodes.some((n) => n.currentNode.toString() === neighbor.toString()))
+        continue;
+      if (queue.some((n) => n.slice(0, 2).toString() === neighbor.toString()))
+        continue;
+      if (i < 0 || j < 0 || i > grid.length - 1 || j > grid[i].length - 1)
+        continue;
+      if (grid[i][j] === 1) continue;
+
+      queue.push([...neighbor, node.currentNodeId]);
+    }
+  }
+
+  return nodes;
+};
+
+export const bfsPathfinder = (endPos, nodes) => {
+  const prePath = [];
+  const endNode = nodes.find(
+    (n) => endPos.toString() === n.currentNode.toString()
+  );
+  prePath.push(endNode);
+
+  while (true) {
+    const node = prePath[0];
+    if (!node.parentNodeId) break;
+
+    const nextNode = nodes.find((n) => node.parentNodeId === n.currentNodeId);
+    prePath.unshift(nextNode);
+  }
+
+  const path = prePath.map((node) => node.currentNode);
+
+  return path;
+};
