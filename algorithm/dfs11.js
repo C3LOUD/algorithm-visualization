@@ -1,56 +1,33 @@
 "strict mode";
-
+import Node from "../node.js";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-class Node {
-  constructor(row, col, parentNodeId) {
-    this.currentNode = [row, col];
-    this.parentNodeId = parentNodeId;
-  }
-
-  get currentNodeId() {
-    const [row, col] = this.currentNode;
-    return `${row}x${col}`;
-  }
-
-  get neighbors() {
-    const [row, col] = this.currentNode;
-    return [
-      [row + 1, col],
-      [row - 1, col],
-      [row, col + 1],
-      [row, col - 1],
-    ];
-  }
-}
-
-export const bfsStart = (startPos, grid) => {
+export const dfsStart = (startPos, grid) => {
   let queue = [];
   const nodes = [];
+  let visitedNodes = [startPos];
   queue.push(startPos);
 
   while (!!queue.length) {
-    const node = new Node(...queue.shift());
+    const node = new Node(...queue.pop());
     nodes.push(node);
 
     for (let neighbor of node.neighbors) {
       const [i, j] = neighbor;
-      if (nodes.some((n) => n.currentNode.toString() === neighbor.toString()))
-        continue;
-      if (queue.some((n) => n.slice(0, 2).toString() === neighbor.toString()))
-        continue;
+      if (visitedNodes.some((n) => n[0] === i && n[1] === j)) continue;
       if (i < 0 || j < 0 || i > grid.length - 1 || j > grid[i].length - 1)
         continue;
-      if (grid[i][j] === 1) continue;
+      if (grid[i][j] !== 0) continue;
 
       queue.push([...neighbor, node.currentNodeId]);
+      visitedNodes.push(neighbor);
     }
   }
 
   return nodes;
 };
 
-export const bfsPathfinder = (endPos, nodes) => {
+export const dfsPathfinder = (endPos, nodes) => {
   const prePath = [];
   const endNode = nodes.find(
     (n) => endPos.toString() === n.currentNode.toString()
