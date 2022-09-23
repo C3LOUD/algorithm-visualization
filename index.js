@@ -1,6 +1,9 @@
 "strict mode";
 import Board from "./board.js";
-import { bfsStart, bfsPathfinder } from "./bfs.js";
+import { bfsStart, bfsPathfinder } from "./algorithm/bfs.js";
+import { dfsStart, dfsPathfinder } from "./algorithm/dfs.js";
+
+import aldousBorder from "./maze-generator/aldous-border.js";
 
 const App = () => {
   const board = new Board();
@@ -17,9 +20,8 @@ const App = () => {
 
   const renderPath = async (e) => {
     if (e.key !== "Enter") return;
-    const path = bfsPathfinder(endPoint, nodesList);
+    const path = dfsPathfinder(endPoint, nodesList);
     await renderSearchPath();
-    console.log("fired");
     board.setPath(path);
     removeEventListener("keydown", renderPath);
   };
@@ -34,7 +36,7 @@ const App = () => {
 
   const pickStartPoint = (e) => {
     const [i, j] = e.target.dataset.id.split(",");
-    nodesList = bfsStart([+i, +j], board.grid);
+    nodesList = dfsStart([+i, +j], board.grid);
     board.setStarter([+i, +j]);
     board.board.removeEventListener("click", pickStartPoint);
     board.board.addEventListener("click", pickEndPoint);
@@ -48,6 +50,8 @@ const App = () => {
       board.board.addEventListener("click", pickStartPoint);
     }
   });
+
+  aldousBorder(board.grid);
 };
 
 App();

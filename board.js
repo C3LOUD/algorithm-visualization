@@ -1,5 +1,5 @@
 "strict mode";
-const sleep = (s) => new Promise((resolve) => setTimeout(resolve, s * 1000));
+import { sleep } from "./util.js";
 
 export default class Board {
   grid;
@@ -12,11 +12,11 @@ export default class Board {
   resetBoard = () => {
     this.grid = [];
     for (let i = 0; i < 25; i++) {
-      // this.grid.push(new Array(25).fill(0));
-      this.grid.push([]);
-      for (let j = 0; j < 25; j++) {
-        this.grid[i].push(Math.round(Math.random() * 0.7));
-      }
+      this.grid.push(new Array(25).fill(0));
+      // this.grid.push([]);
+      // for (let j = 0; j < 25; j++) {
+      //   this.grid[i].push(Math.round(Math.random() * 0.7));
+      // }
     }
   };
 
@@ -31,9 +31,9 @@ export default class Board {
   };
 
   setPath = async (path) => {
-    path.splice(0, 1);
-    path.splice(-1);
     for (const node of path) {
+      const [i, j] = node;
+      if (this.grid[i][j] !== 0) continue;
       const grid = document.querySelector(`[data-id="${node}"]`);
       grid.style.backgroundColor = "orange";
       await sleep(0.2);
