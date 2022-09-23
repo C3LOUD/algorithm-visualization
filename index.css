@@ -23,6 +23,7 @@ body {
   line-height: 1.5;
   font-size: 62.5%;
   min-height: 100vh;
+  font-family: sans-serif;
 }
 
 img,
@@ -65,6 +66,7 @@ select {
   /* gap: var(--gap, 1rem); */
   grid-template-columns: var(--col, 1fr, auto);
   grid-template-rows: var(--row, 1fr, auto);
+  gap: 0;
 }
 
 /* .flow > * + * {
@@ -131,19 +133,46 @@ select {
 .container {
   flex: 1;
   margin-inline: auto;
-  padding: 1rem;
+  /* padding: 1rem; */
   background-color: #eee;
-  display: inline-block;
   width: 100vw;
 }
 
 .board {
   margin-inline: auto;
-  width: 40rem;
+  height: vmin;
+  width: 90vmin;
 }
 
 .cell {
-  aspect-ratio: 1/1;
   transition-duration: 1s;
-  border: 1px solid black;
+  border-top: 0.5px solid black;
+  border-right: 0.5px solid black;
+  aspect-ratio: 1;
+}
+
+.btn:link,
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn:active,
+.btn:visited {
+  cursor: pointer;
+}
+
+.start-btn {
+  background-color: green;
+}
+
+.reset-btn {
+  background-color: red;
+}
+
+.startPoint {
+  background-color: red;
+}
+
+.endPoint {
+  background-color: green;
 }

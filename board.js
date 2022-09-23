@@ -6,6 +6,8 @@ export default class Board {
 
   constructor() {
     this.board = document.querySelector(".board");
+    this.startPoint = [12, 8];
+    this.endPoint = [12, 17];
     this.init();
   }
 
@@ -22,24 +24,54 @@ export default class Board {
     }
   };
 
-  resetCell = (e) => {
-    console.log(e.target);
+  getStartEnd = () => {
+    return [this.startPoint, this.endPoint];
   };
 
-  setStarter = (startPos) => {
+  dropTarget = (e) => {
+    const [i, j] = e.target.dataset.id.split(",");
+    if (this.grid[i][j] === 1) return;
+
+    const [k, l] = e.dataTransfer.getData("id").split(",");
+    const cellToRemove = document.querySelector(`[data-id="${[k, l]}"]`);
+    this.grid[k][l] = 0;
+
+    if ([...cellToRemove.classList][1] === "startPoint") {
+      this.startPoint = [+i, +j];
+      this.setStartPoint(this.startPoint);
+    } else {
+      this.endPoint = [+i, +j];
+      this.setEndPoint(this.endPoint);
+    }
+
+    cellToRemove.classList.remove(`${[...cellToRemove.classList][1]}`);
+  };
+
+  dragStart = (e) => {
+    e.dataTransfer.setData("id", e.target.dataset.id);
+  };
+
+  cancelDefault = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  };
+
+  setStartPoint = (startPos) => {
     const [i, j] = startPos;
     const grid = document.querySelector(`[data-id="${startPos}"]`);
     grid.setAttribute("draggable", "true");
-    this.grid[i][j] = "s";
-    grid.style.backgroundColor = "red";
+    grid.classList.add("startPoint");
+    grid.addEventListener("dragstart", this.dragStart), (this.grid[i][j] = "s");
   };
 
-  setTarget = (targetPos) => {
-    const [i, j] = targetPos;
-    const grid = document.querySelector(`[data-id="${targetPos}"]`);
+  setEndPoint = (endPos) => {
+    const [i, j] = endPos;
+    const grid = document.querySelector(`[data-id="${endPos}"]`);
     grid.setAttribute("draggable", "true");
+    grid.classList.add("endPoint");
+    grid.addEventListener("dragstart", this.dragStart);
     this.grid[i][j] = "t";
-    grid.style.backgroundColor = "green";
   };
 
   setPath = async (path) => {
@@ -66,7 +98,7 @@ export default class Board {
   readyToSetupMaze = () => {
     this.grid.forEach((cells, i) =>
       cells.forEach((cell, j) => {
-        grid[i][j] = 1;
+        this.grid[i][j] = 1;
       })
     );
   };
@@ -88,8 +120,10 @@ export default class Board {
   init() {
     this.resetBoard(25);
     this.generateBoard();
-    this.setStarter([12, 8]);
-    this.setTarget([12, 17]);
-    this.board.addEventListener("drop", this.resetCell.bind(this));
+    this.setStartPoint(this.startPoint);
+    this.setEndPoint(this.endPoint);
+    this.board.addEventListener("drop", this.dropTarget);
+    this.board.addEventListener("dragenter", this.cancelDefault);
+    this.board.addEventListener("dragover", this.cancelDefault);
   }
 }

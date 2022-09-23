@@ -16,7 +16,7 @@ export const dfsStart = (startPos, grid) => {
       if (visitedNodes[neighbor]) continue;
       if (i < 0 || j < 0 || i > grid.length - 1 || j > grid[i].length - 1)
         continue;
-      if (grid[i][j] !== 0) continue;
+      if (grid[i][j] === 1) continue;
       visitedNodes[neighbor] = true;
       dfsRecursive(neighbor, visitedNodes, n.currentNodeId);
     }
@@ -29,6 +29,7 @@ export const dfsStart = (startPos, grid) => {
 
 export const dfsPathfinder = (endPos, nodes) => {
   const prePath = [];
+
   const endNode = nodes.find(
     (n) => endPos.toString() === n.currentNode.toString()
   );

@@ -56,8 +56,6 @@ const aldousBorder = (grid) => {
     current = next;
   }
 
-  console.log(grid);
-
   grid.forEach((cells, i) =>
     cells.forEach((cell, j) => {
       const g = document.querySelector(`[data-id="${i},${j}"]`);
