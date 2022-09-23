@@ -1,36 +1,15 @@
 "strict mode";
+import Node from "./node.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-class Node {
-  constructor(row, col, parentNodeId) {
-    this.currentNode = [row, col];
-    this.parentNodeId = parentNodeId;
-  }
-
-  get currentNodeId() {
-    const [row, col] = this.currentNode;
-    return `${row}x${col}`;
-  }
-
-  get neighbors() {
-    const [row, col] = this.currentNode;
-    return [
-      [row + 1, col],
-      [row - 1, col],
-      [row, col + 1],
-      [row, col - 1],
-    ];
-  }
-}
-
-export const bfsStart = (startPos, grid) => {
+export const dfsStart = (startPos, grid) => {
   let queue = [];
   const nodes = [];
   queue.push(startPos);
 
   while (!!queue.length) {
-    const node = new Node(...queue.shift());
+    const node = new Node(...queue.pop());
     nodes.push(node);
 
     for (let neighbor of node.neighbors) {
@@ -50,7 +29,7 @@ export const bfsStart = (startPos, grid) => {
   return nodes;
 };
 
-export const bfsPathfinder = (endPos, nodes) => {
+export const dfsPathfinder = (endPos, nodes) => {
   const prePath = [];
   const endNode = nodes.find(
     (n) => endPos.toString() === n.currentNode.toString()

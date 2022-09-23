@@ -5,8 +5,8 @@
   --clr-light: 231 77% 90%;
   --clr-white: 0 0% 100%;
 
-  --col: repeat(25, 1fr);
-  --row: repeat(25, 1fr);
+  --col: repeat(11, 1fr);
+  --row: repeat(11, 1fr);
 }
 
 /** Reset */
@@ -64,6 +64,10 @@ select {
 .flex {
   display: flex;
   /* gap: var(--gap, 1rem); */
+}
+
+.flex--dir-col {
+  flex-direction: column;
 }
 
 .grid {
