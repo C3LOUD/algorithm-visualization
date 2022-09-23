@@ -9,10 +9,12 @@ export default class Board {
     this.init();
   }
 
-  resetBoard = () => {
+  resetBoard = (length) => {
+    this.board.style.setProperty("--col", `repeat(${length}, 1fr)`);
+    this.board.style.setProperty("--row", `repeat(${length}, 1fr)`);
     this.grid = [];
-    for (let i = 0; i < 71; i++) {
-      this.grid.push(new Array(71).fill(0));
+    for (let i = 0; i < length; i++) {
+      this.grid.push(new Array(length).fill(0));
       // this.grid.push([]);
       // for (let j = 0; j < 25; j++) {
       //   this.grid[i].push(Math.round(Math.random() * 0.7));
@@ -20,13 +22,23 @@ export default class Board {
     }
   };
 
+  resetCell = (e) => {
+    console.log(e.target);
+  };
+
   setStarter = (startPos) => {
+    const [i, j] = startPos;
     const grid = document.querySelector(`[data-id="${startPos}"]`);
+    grid.setAttribute("draggable", "true");
+    this.grid[i][j] = "s";
     grid.style.backgroundColor = "red";
   };
 
   setTarget = (targetPos) => {
+    const [i, j] = targetPos;
     const grid = document.querySelector(`[data-id="${targetPos}"]`);
+    grid.setAttribute("draggable", "true");
+    this.grid[i][j] = "t";
     grid.style.backgroundColor = "green";
   };
 
@@ -35,7 +47,7 @@ export default class Board {
       const [i, j] = node;
       if (this.grid[i][j] !== 0) continue;
       const grid = document.querySelector(`[data-id="${node}"]`);
-      grid.style.backgroundColor = "orange";
+      grid.style.backgroundColor = "#fa798f";
       await sleep(0.02);
     }
   };
@@ -51,14 +63,21 @@ export default class Board {
     });
   };
 
-  renderBoard = async () => {
+  readyToSetupMaze = () => {
+    this.grid.forEach((cells, i) =>
+      cells.forEach((cell, j) => {
+        grid[i][j] = 1;
+      })
+    );
+  };
+
+  generateBoard = async () => {
     this.board.innerHTML = "";
     for (const i in this.grid) {
       for (const j in this.grid[i]) {
         const el = document.createElement("div");
-        el.style.border = "1px solid black";
         el.setAttribute("data-id", `${i},${j}`);
-        el.style.transitionDuration = "1s";
+        el.classList.add("cell");
         this.grid[i][j] === 1 ? (el.style.backgroundColor = "black") : null;
         this.board.appendChild(el);
         // await sleep(0.005);
@@ -67,7 +86,10 @@ export default class Board {
   };
 
   init() {
-    this.resetBoard();
-    this.renderBoard();
+    this.resetBoard(25);
+    this.generateBoard();
+    this.setStarter([12, 8]);
+    this.setTarget([12, 17]);
+    this.board.addEventListener("drop", this.resetCell.bind(this));
   }
 }

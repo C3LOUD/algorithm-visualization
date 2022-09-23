@@ -2,12 +2,6 @@
 import { randomNum } from "../util.js";
 
 const aldousBorder = (grid) => {
-  grid.forEach((cells, i) =>
-    cells.forEach((cell, j) => {
-      grid[i][j] = 1;
-    })
-  );
-
   let counter =
     Math.ceil((grid.length - 2) / 2) * Math.ceil((grid[0].length - 2) / 2);
   const startPoint = [1, 1];

@@ -7,6 +7,10 @@ import aldousBorder from "./maze-generator/aldous-border.js";
 
 const App = () => {
   const board = new Board();
+  const pathfinder = document.querySelector(".pathfinder");
+  const maze = document.querySelector(".maze");
+  const start = document.querySelector(".start-btn");
+  const reset = document.querySelector("reset-btn");
   let nodesList;
   let endPoint;
 
@@ -52,7 +56,7 @@ const App = () => {
     }
   });
 
-  aldousBorder(board.grid);
+  // aldousBorder(board.grid);
 };
 
 App();
