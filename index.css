@@ -5,8 +5,8 @@
   --clr-light: 231 77% 90%;
   --clr-white: 0 0% 100%;
 
-  --col: repeat(11, 1fr);
-  --row: repeat(11, 1fr);
+  --col: repeat(71, 1fr);
+  --row: repeat(71, 1fr);
 }
 
 /** Reset */

@@ -11,8 +11,8 @@ export default class Board {
 
   resetBoard = () => {
     this.grid = [];
-    for (let i = 0; i < 25; i++) {
-      this.grid.push(new Array(25).fill(0));
+    for (let i = 0; i < 71; i++) {
+      this.grid.push(new Array(71).fill(0));
       // this.grid.push([]);
       // for (let j = 0; j < 25; j++) {
       //   this.grid[i].push(Math.round(Math.random() * 0.7));

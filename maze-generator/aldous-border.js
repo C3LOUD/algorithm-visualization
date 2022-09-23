@@ -2,42 +2,38 @@
 import { randomNum } from "../util.js";
 
 const aldousBorder = (grid) => {
-  let counter = 0;
-  grid.forEach((cells, i) => {
+  grid.forEach((cells, i) =>
     cells.forEach((cell, j) => {
-      const grid = document.querySelector(`[data-id="${[i, j]}"]`);
-      grid.style.backgroundColor = "black";
-      grid.style.border = "1px solid white";
-      counter += 1;
-    });
-  });
+      grid[i][j] = 1;
+    })
+  );
 
-  const randomGridMax = randomNum(grid.length - 1);
-  const randomSwitcher = randomNum(2) === 2 ? true : false;
-  const startPoint = randomSwitcher ? [0, randomGridMax] : [randomGridMax, 0];
+  let counter =
+    Math.ceil((grid.length - 2) / 2) * Math.ceil((grid[0].length - 2) / 2);
+  const startPoint = [1, 1];
+  grid[1][1] = 0;
   let next;
   let pass;
-  const randomDir = (node) => {
+  const dir = (node, num) => {
     const [i, j] = node;
-    switch (randomNum(4)) {
-      case 0:
+    switch (num) {
+      case 1:
         next = [i + 2, j];
         pass = [i + 1, j];
         break;
-      case 1:
+      case 2:
         next = [i - 2, j];
         pass = [i - 1, j];
         break;
-      case 2:
-        next = [i + 2, j];
-        pass = [i + 1, j];
-        break;
       case 3:
-        next = [i + 2, j];
-        pass = [i + 1, j];
+        next = [i, j + 2];
+        pass = [i, j + 1];
+        break;
+      case 4:
+        next = [i, j - 2];
+        pass = [i, j - 1];
         break;
     }
-    return next;
   };
 
   let visited = {};
@@ -45,24 +41,35 @@ const aldousBorder = (grid) => {
   let current = startPoint;
 
   while (true) {
-    if (visited[current]) continue;
+    // if (visited[current]) continue;
+    const [curI, curJ] = current;
     visited[current] = true;
-    //check if all of the maze has been walk through
+    grid[curI][curJ] = 0;
 
     while (true) {
-      randomDir(current);
+      dir(current, randomNum(4));
       const [i, j] = next;
-      if (i < 0 || j < 0 || i > grid.length - 1 || j > grid.length - 1) {
-      } else {
+      if (i > 0 && j > 0 && i < grid.length - 1 && j < grid[0].length - 1)
         break;
-      }
     }
-    visited[pass] = true;
 
-    if (Object.keys(visited).length === 10) return;
-    console.log(next);
+    if (!visited[next]) {
+      const [passI, passJ] = pass;
+      grid[passI][passJ] = 0;
+    }
+
+    if (Object.keys(visited).length === counter) break;
     current = next;
   }
+
+  console.log(grid);
+
+  grid.forEach((cells, i) =>
+    cells.forEach((cell, j) => {
+      const g = document.querySelector(`[data-id="${i},${j}"]`);
+      g.style.backgroundColor = cell === 1 ? "black" : "white";
+    })
+  );
 };
 
 export default aldousBorder;
